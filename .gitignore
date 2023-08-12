@@ -1,3 +1,4 @@
 *.out
 ignore/
 .vscode/
+*.zip
