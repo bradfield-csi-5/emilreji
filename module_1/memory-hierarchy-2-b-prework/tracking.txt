@@ -1,0 +1,53 @@
+Before: (go test -bench=.)
+
+goos: linux
+goarch: amd64
+pkg: vm/Documents/emilreji/module_1/memory-hierarchy-2-b-prework/metrics
+cpu: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz
+BenchmarkMetrics/Average_age-8               267           4623497 ns/op
+BenchmarkMetrics/Average_payment-8            34          31950113 ns/op
+BenchmarkMetrics/Payment_stddev-8             18          67295438 ns/op
+PASS
+ok      vm/Documents/emilreji/module_1/memory-hierarchy-2-b-prework/metrics     5.393s
+
+goos: linux
+goarch: amd64
+pkg: vm/Documents/emilreji/module_1/memory-hierarchy-2-b-prework/metrics
+cpu: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz
+BenchmarkMetrics/Average_age-8               250           4846289 ns/op
+BenchmarkMetrics/Average_payment-8            31          33583814 ns/op
+BenchmarkMetrics/Payment_stddev-8             19          66695561 ns/op
+PASS
+ok      vm/Documents/emilreji/module_1/memory-hierarchy-2-b-prework/metrics     5.412s
+
+Before: (go test -bench=. -count 3)
+
+count 3
+goos: linux
+goarch: amd64
+pkg: vm/Documents/emilreji/module_1/memory-hierarchy-2-b-prework/metrics
+cpu: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz
+BenchmarkMetrics/Average_age-8               253           4948124 ns/op
+BenchmarkMetrics/Average_age-8               217           4921688 ns/op
+BenchmarkMetrics/Average_age-8               235           4646267 ns/op
+BenchmarkMetrics/Average_payment-8            38          33996241 ns/op
+BenchmarkMetrics/Average_payment-8            33          35073988 ns/op
+BenchmarkMetrics/Average_payment-8            42          33918663 ns/op
+BenchmarkMetrics/Payment_stddev-8             19          69403193 ns/op
+BenchmarkMetrics/Payment_stddev-8             16          69048553 ns/op
+BenchmarkMetrics/Payment_stddev-8             19          68219420 ns/op
+PASS
+ok      vm/Documents/emilreji/module_1/memory-hierarchy-2-b-prework/metrics     15.072s
+
+Avg Age Changes:
+goos: linux
+goarch: amd64
+pkg: vm/Documents/emilreji/module_1/memory-hierarchy-2-b-prework/metrics
+cpu: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz
+BenchmarkMetrics/Average_age_orig-8                  277           3975921 ns/op
+BenchmarkMetrics/Average_age_V2-8                    308           3954410 ns/op
+BenchmarkMetrics/Average_age_V3-8                    310           3864603 ns/op
+BenchmarkMetrics/Average_age_V4-8                    456           2468134 ns/op
+BenchmarkMetrics/Average_age_V5-8                    444           2572289 ns/op
+PASS
+ok      vm/Documents/emilreji/module_1/memory-hierarchy-2-b-prework/metrics     9.308s
