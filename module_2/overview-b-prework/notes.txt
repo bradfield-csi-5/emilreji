@@ -1,0 +1,106 @@
+https://www.tcpdump.org/manpages/pcap-savefile.5.html
+
+Header length is 24 octets (8 bits). That means 12 groups of 4 hex digits.
+d4c3 b2a1 0200 0400 0000 0000 0000 0000 ea05 0000 0100 0000
+
+magic number: d4c3 b2a1
+Look it up here: https://en.wikipedia.org/wiki/List_of_file_signatures
+So its little endian libpcap file format
+
+https://www.youtube.com/watch?v=jhErugDB-34
+Little endian means most significant byte is stored at largest memory address
+Most significant byte is largest value aka left most value
+Least significant byte is littlest value aka right most value
+So we put least significant value in littlest memory address (aka first) for little endian
+Little endian looks backwards from a human perspective
+
+pcap-savefile manpage says that the reason its backwards is because 
+it is read by host with opposite byte order as host that wrote the file
+
+major version: 0200
+minor version: 0400
+
+Reserved 1 is next 8 hex digits of 0. Reserved 2 is following 8 hex digits of 0.
+
+Snapshot length: ea05 0000
+This is the max size of each packet that is stored in the capture in bytes.
+
+Link-layer header type and additional info: 0100 0000
+binary version little endian is: 0001 (followed by 28 0s)
+So FCS len is 1?
+For link layer type (last 16 bits), seems to be 0. See this link:
+https://linux.die.net/man/7/pcap-linktype
+0 indicates a linktype of null; however it should be ethernet which is a value of 1
+NOTE: maybe I have the order of entire link layer header type and additonal info backwards 
+(maybe 01 is part of link layer type rather than FCS)
+
+
+
+
+
+After first 24 octets of header is 0 or more packets
+Each packet has header of 16 octets aka 8 groups of 4 hex digits.
+1st packet's header: 4098 d057 0a1f 0300 4e00 0000 4e00 0000
+
+Time in seconds since epoch: 4098 d057
+Decimal version: 1083756631
+Date: Wednesday, May 5, 2004 11:30:31 AM
+Backwards: 57d0 9840
+Decimal Version: 1473288256
+Date: Wednesday, September 7, 2016 10:44:16 PM
+
+https://www.rapidtables.com/convert/number/hex-to-decimal.html
+https://www.epochconverter.com/
+
+Time in mircro/nano seconds since second: 0a1f 0300
+Decimal version: 169804544
+
+Length of captured packet data: 4e00 0000
+Backwards: 0000 004e
+Length is 78 bytes
+
+Un-truncated length of the package data: 4e00 0000
+
+Both lengths seem to be the same so that means package was not truncated.
+
+
+
+Problem:
+4098 d057 in xxd maps to 57D09840 which is 1473288256 which is Wednesday, September 7, 2016 10:44:16 PM
+13 instances in xxd (1 set is split across 2 lines) and 13 in prog output
+4198 d057 in xxd maps to 57D09841 which is 1473288257 which is Wednesday, September 7, 2016 10:44:17 PM
+7 instances in xxd and 3 in prog output
+
+So the 16th packet is the issue
+Golang answer code (minimal_test) shows that curr packet len for 16th is 1490
+However my code outputs len of 210:
+16: Timestamp address: 57D09841	timestamp val: 65
+16: Timestamp Small address: 00061543	timestamp small val: 67
+16: currPacketSize address: 000005D2	currPacketSize val: 210
+16: truncPacketSize address: 000005D2	truncPacketSize val: 210
+16: timestamp: 65  timestampSmall: 67  currByte: 1504  currPacketSize: 210  truncPacketSize: 210
+16: next currByte: 1714
+
+xxd output for 16th packet header is:
+4198 d057 4315 0600 d205 0000 d205 0000
+
+d205 0000 in xxd maps to 000005d2 which is 1490
+
+
+Ethernet Frames:
+1st frame starts from 40 bytes onwards
+MAC Dest:   c4e9 8487 6028 
+MAC Src:    a45e 60df 2e1b 
+Ethertype:  0800 
+According to https://en.wikipedia.org/wiki/EtherType 0800 is for IPv4
+
+
+IP:
+1st packet starts from 54 onwards
+Skip to 56 to get total length since first 2 bytes are other fields
+
+Seems packets are big endian instead of little endian
+
+https://en.wikipedia.org/wiki/List_of_IP_protocol_numbers
+6 for TCP
+
