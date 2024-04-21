@@ -8,14 +8,16 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 	"os"
 	"strings"
 	"testing"
 )
 
 func efficient() {
-	fmt.Println(strings.Join(os.Args[1:], " "))
+	// var s string = strings.Join(os.Args[1:], " ");
+	strings.Join(os.Args[1:], " ");
+	// fmt.Println(s)
 }
 
 func inefficient() {
@@ -26,7 +28,7 @@ func inefficient() {
 		// old string that s used to point to is garbage collected
 		sep = " "
 	}
-	fmt.Println(s)
+	// fmt.Println(s)
 }
 
 func BenchmarkEfficient(b *testing.B) {
@@ -67,3 +69,17 @@ last line end also has total time taken for all iterations
 // }
 
 //!-
+
+
+
+// run example:
+// ubuntu@ubuntu-Inspiron-7773:~/Documents/emilreji/prep-phase/go/1-3$ go test -bench=.
+// goos: linux
+// goarch: amd64
+// pkg: vm/Documents/emilreji/prep-phase/go/1-3
+// cpu: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz
+// BenchmarkEfficient-8            19064372                68.07 ns/op
+// BenchmarkInefficient-8          11019427               133.0 ns/op
+// PASS
+// ok      vm/Documents/emilreji/prep-phase/go/1-3 3.925s
+// ubuntu@ubuntu-Inspiron-7773:~/Documents/emilreji/prep-phase/go/1-3$ 
