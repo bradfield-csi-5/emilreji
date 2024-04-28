@@ -31,11 +31,15 @@ const createStorage = () => {
 
 ;(async function() {
   createStorage();
-  const obj = deserialize();
+
   while (true) {
     const result = await rl.question('prompt> ');
     const arr = result.split(" ");
     const command = arr[0];
+
+    const obj = deserialize();
+    // moving here ensures sets from other clients are 
+    // pulled in from file before next command is run
 
     if (command === "get") {
       const key = arr[1];
